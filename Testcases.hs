@@ -114,7 +114,7 @@ wait = proc "wait" $ \ n i ->
 waitLoop :: Def ('[Sint32, Sint32, Ref s (Stored Sint32)] :-> ())
 waitLoop = proc "waitLoop" $ \ n i iters ->
   requires (checkStored iters (>=? 0)) $
-  ensures  (const (checkStored iters (>=? 0))) $    -- XXX How are these passing?  Is this a problem with recursion?
+  ensures_ (checkStored iters (>=? 0)) $    -- XXX How are these passing?  Is this a problem with recursion?
   body $ do
     ifte_ (n >? 0)
       ( do

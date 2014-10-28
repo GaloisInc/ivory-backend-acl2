@@ -13,6 +13,7 @@ import Text.Printf
 import qualified Language.ACL2 as A
 
 import qualified Ivory.Language.Syntax.AST  as I
+import Ivory.Language.Syntax.Concrete.Pretty
 import qualified Ivory.Language.Syntax.Type as I
 import Ivory.Compile.ACL2 (var)
 import Ivory.Opts.Asserts.VC
@@ -296,7 +297,7 @@ checkAssert stmt check = do
   pass <- checkVC check
   if pass
     then do
-      return $ I.Comment $ "Assertion verified: " ++ show stmt
+      return $ I.Comment $ I.UserComment $ "Assertion verified: " ++ show stmt
     else do
       report Failure $ "FAIL: Assertion failed in " ++ proc ++ ": " ++ show stmt ++ "\n"
       return stmt
@@ -357,7 +358,8 @@ block = mapM stmt
 -- Rewrite statements.
 stmt :: I.Stmt -> V I.Stmt
 stmt a = case a of
-  I.Comment        c -> comment ("Ivory comment: " ++ c) >> return a
+  I.Comment (I.UserComment c) -> comment ("Ivory comment: " ++ c) >> return a
+  I.Comment (I.SourcePos src) -> comment (prettyPrint (pretty src)) >> return a
   I.Assert         b -> checkAssert a b
   I.CompilerAssert b -> checkAssert a b
   I.Assume         b -> checkAssert a b
