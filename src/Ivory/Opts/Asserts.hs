@@ -438,7 +438,7 @@ stmt a = case a of
         Just ret -> comment' "Extend environment with return value." $ extendEnv (var ret) returnValue
       return a
 
-  I.Loop _ _ _ _ -> freeStack >> return a
+  I.Loop _ _ _ _ _ -> freeStack >> return a
   I.Forever _    -> freeStack >> return a
   I.Break -> error "Break found outside of loop."
 

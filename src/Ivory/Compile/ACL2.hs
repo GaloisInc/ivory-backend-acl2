@@ -68,7 +68,7 @@ cllStmt a = case a of
 
   I.Call   _ Nothing  fun args  -> M.Call Nothing        (var fun) $ map (cllExpr . I.tValue) args
   I.Call   _ (Just r) fun args  -> M.Call (Just $ var r) (var fun) $ map (cllExpr . I.tValue) args
-  I.Loop i init incr' body      -> M.Loop (var i) (cllExpr init) incr (cllExpr to) (cllStmts body)
+  I.Loop _ i init incr' body    -> M.Loop (var i) (cllExpr init) incr (cllExpr to) (cllStmts body)
     where
     (incr, to) = case incr' of
       I.IncrTo a -> (True, a)
